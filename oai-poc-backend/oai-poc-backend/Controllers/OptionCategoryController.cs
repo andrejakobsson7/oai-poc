@@ -17,7 +17,7 @@ namespace oai_poc_backend.Controllers
             _optionCategoryRepository = optionCategoryRepository;
         }
 
-        [HttpGet("get-option-categories")]
+        [HttpGet("getOptioncategories")]
         public async Task<IActionResult> GetOptionCategoriesWithOptions()
         {
             try

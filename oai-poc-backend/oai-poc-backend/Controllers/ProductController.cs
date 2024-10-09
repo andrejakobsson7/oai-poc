@@ -22,43 +22,7 @@ namespace oai_poc_backend.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("get-products")]
-        public async Task<IActionResult> GetAllProductsForUserAsync()
-        {
-            //Hitta aktuellt användar-id
-            //TODO: Lägg in organization id som custom claim!
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-            {
-                return Unauthorized(new { errorMessage = "User could not be authenticated. Please log in and try again." });
-            }
-            else
-            {
-                //Get signed in user with the user id.
-                ApplicationUser? signedInUser = await _userManager.FindByIdAsync(userId);
-                if (signedInUser == null)
-                {
-                    //If user is not set as IdentityUser, it will not find it even though the id exists.
-                    return NotFound(new { errorMessage = $"Application user with id {userId} could not be found. Please contact support to update your Discriminator from IdentityUser to ApplicationUser." });
-                }
-                else
-                {
-                    //Get products by organization id for the found user.
-                    try
-                    {
-                        List<ProductModel> products = await _productRepository.GetAllProductsForOrganizationIdAsync(signedInUser.OrganizationId);
-                        return Ok(products);
-                    }
-                    catch (Exception ex)
-                    {
-                        return StatusCode(500, new { errorMessage = ex.Message });
-                    }
-
-                }
-            }
-        }
-
-        [HttpGet("get-products-custom-login")]
+        [HttpGet("getProducts")]
         public async Task<IActionResult> GetAllCustomProductsForUserAsync()
         {
             //Extrahera användarens org.id från claims.

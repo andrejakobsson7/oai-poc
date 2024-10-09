@@ -10,13 +10,12 @@ namespace oai_poc_backend.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    //NEW SCHOOL
     public class PromptController(GenericRepository<PromptModel> genericRepository) : ControllerBase
     {
 
         private readonly GenericRepository<PromptModel> _genericRepository = genericRepository;
 
-        [HttpPost("post-prompt")]
+        [HttpPost("postPrompt")]
         public async Task<IActionResult> AddPromptAsync(PromptDto prompt)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

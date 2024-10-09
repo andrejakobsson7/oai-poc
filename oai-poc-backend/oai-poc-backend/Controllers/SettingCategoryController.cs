@@ -17,7 +17,7 @@ namespace oai_poc_backend.Controllers
             _settingCategoryRepository = settingCategoryRepository;
         }
 
-        [HttpGet("get-setting-categories")]
+        [HttpGet("getSettingcategories")]
         public async Task<IActionResult> GetSettingCategoriesWithSettingsAsync()
         {
             try

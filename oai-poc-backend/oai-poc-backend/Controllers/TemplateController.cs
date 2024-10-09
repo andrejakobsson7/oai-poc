@@ -21,7 +21,7 @@ namespace oai_poc_backend.Controllers
             _templateRepository = templateRepository;
         }
 
-        [HttpPost("post-template")]
+        [HttpPost("postTemplate")]
         public async Task<IActionResult> AddTemplateAsync(TemplateDto template)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
