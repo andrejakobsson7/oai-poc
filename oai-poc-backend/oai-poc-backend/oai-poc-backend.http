@@ -1,0 +1,6 @@
+@oai_poc_backend_HostAddress = http://localhost:5185
+
+GET {{oai_poc_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
