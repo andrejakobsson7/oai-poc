@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using oai_poc_backend.Data_Transfer_Objects.From_client;
@@ -51,6 +52,22 @@ namespace oai_poc_backend.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+                return Ok(new { message = "User successfully logged out" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Internal server while logging out. Please try again later." });
+            }
+
         }
     }
 }
