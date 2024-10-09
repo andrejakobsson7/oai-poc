@@ -29,9 +29,7 @@ namespace oai_poc_backend.Controllers
             var result = await _signInManager.PasswordSignInAsync(userName: loginData.Email, password: loginData.Password, isPersistent: loginData.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                if (loginData.RememberMe)
-                {
-                    var claims = new List<Claim>
+                var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id),
                         new Claim(ClaimTypes.Email, loginData.Email),
@@ -39,24 +37,15 @@ namespace oai_poc_backend.Controllers
                         new Claim("OrganizationId", user.OrganizationId.ToString())
                     };
 
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = loginData.RememberMe
-                    };
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                }
-                else
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
                 {
-                    Response.Cookies.Append(".AspNetCore.Identity.Application", "cookieValue", new CookieOptions
-                    {
-                        Expires = DateTimeOffset.UtcNow.AddMinutes(30),
-                        IsEssential = true,
-                        HttpOnly = true
-                    });
-                }
+                    IsPersistent = loginData.RememberMe,
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                 return Ok();
+
             }
             else
             {

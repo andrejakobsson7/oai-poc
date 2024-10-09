@@ -18,10 +18,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-//builder.Services.ConfigureApplicationCookie(options =>
-//{
-//    options.
-//})
 //Hämta connection string från appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");
 
@@ -52,12 +48,9 @@ builder.Services.AddCors(options =>
 //Allow cross-site requests. Default is SameSiteMode.Lax but then I could not include credentials from client side.
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    //Required so that the app doesn't both set the default identity cookie AND the custom cookie ("oai-authentication-cookie").
+    //The rest of the cookie settings can be found in the AddAuthentication.AddCookie - method below.
     options.Cookie.Name = "oai-authentication-cookie";
-    //options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -67,6 +60,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.Name = "oai-authentication-cookie";
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
     });
 
 //Add user manager to enable quering against user tables.
